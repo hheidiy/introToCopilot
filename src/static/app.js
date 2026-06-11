@@ -19,22 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
         activityCard.className = "activity-card";
 
         const spotsLeft = details.max_participants - details.participants.length;
+        const escapeHtml = (value) =>
+          String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
         const participantsMarkup = details.participants.length
           ? `<ul class="participants-list">${details.participants
               .map(
                 (participant) =>
                   `<li>
-                    <span class="participant-email">${participant}</span>
-                    <button class="delete-participant" data-activity="${name}" data-email="${participant}" title="Unregister participant">&#x1F5D1;</button>
+                    <span class="participant-email">${escapeHtml(participant)}</span>
+                    <button class="delete-participant" data-activity="${escapeHtml(name)}" data-email="${escapeHtml(participant)}" title="Unregister participant">&#x1F5D1;</button>
                   </li>`
               )
               .join("")}</ul>`
           : '<p class="participants-empty">No participants yet. Be the first to join!</p>';
 
         activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
+          <h4>${escapeHtml(name)}</h4>
+          <p>${escapeHtml(details.description)}</p>
+          <p><strong>Schedule:</strong> ${escapeHtml(details.schedule)}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
           <div class="participants-section">
             <h5>Participants</h5>
